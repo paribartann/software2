@@ -1,0 +1,1 @@
+export const OPEN_CAMERA = 'OPEN_CAMERA';
