@@ -9,7 +9,6 @@ import * as Permissions from "expo-permissions";
 
 import { openCamera } from "./actions";
 import { makeSelectHasPermission, makeSelectType } from "./selectors";
-import reducer from "./reducer";
 
 export function OptionPage({
   navigation,
@@ -45,7 +44,7 @@ OptionPage.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   hasPermission: makeSelectHasPermission(),
-  type: makeSelectType()
+  type: makeSelectType(),
 });
 
 export function mapDispatchToProps(dispatch) {

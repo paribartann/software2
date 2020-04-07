@@ -1,13 +1,21 @@
 import { createSelector } from 'reselect';
-import { initialState } from '../OptionPage/reducer';
+import { initialState } from './reducer';
 
 const selectOpen = state => state.open || initialState;
+
 
 
   const makeSelectType = () =>
   createSelector(
     selectOpen,
-    openState => openState.type_,
+    openState => openState.cam_type_,
   );
 
-export { selectOpen, makeSelectType };
+  const makeSelectImage = () =>
+  createSelector(
+    selectOpen,
+    openState => openState.image_object,
+  );
+
+
+export { selectOpen, makeSelectType, makeSelectImage };

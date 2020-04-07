@@ -1,0 +1,3 @@
+export const CHANGE_CAMERA_TYPE = 'CHANGE_CAMERA_TYPE';
+export const TAKE_PICTURE = 'TAKE_PICTURE';
+export const OPEN_GALLERY = 'OPEN GALLERY';
