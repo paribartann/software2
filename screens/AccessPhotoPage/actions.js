@@ -1,23 +1,23 @@
-import { TRANSLATE_IMAGE, TRANSLATE_TEXT_SUCCESS, TRANSLATE_TEXT_ERROR, RESET_LOADING_TEXT } from './constants';
+import { EXTRACT_TEXT, EXTRACT_TEXT_SUCCESS, EXTRACT_TEXT_ERROR, RESET_LOADING_TEXT } from './constants';
 
-export function translateImage() {
+export function extractText() {
     return {
-      type: TRANSLATE_IMAGE,
-      //image_
+      type: EXTRACT_TEXT,
     };
   }
 
 
-export function textTranslated(t_text) {
+export function textExtractSuccess(e_text, language) {
   return {
-    type: TRANSLATE_TEXT_SUCCESS,
-    t_text
+    type: EXTRACT_TEXT_SUCCESS,
+    e_text,
+    language
   }
 }  
 
-export function textTranslationError(error) {
+export function textExtractError(error) {
   return {
-    type: TRANSLATE_TEXT_ERROR,
+    type: EXTRACT_TEXT_ERROR,
     error
   }
 }  

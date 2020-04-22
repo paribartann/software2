@@ -1,11 +1,13 @@
 import { combineReducers } from "redux";
 
-import optionPageReducer from "../screens/OptionPage/reducer";
+import mainPageReducer from "../screens/MainPage/reducer";
 import openCameraReducer from "../screens/OpenCameraPage/reducer";
 import accessPhotoReducer from "../screens/AccessPhotoPage/reducer";
+import displayReducer from "../screens/DisplayPage/reducer";
 
 export default combineReducers({
-  option: optionPageReducer,
+  main: mainPageReducer,
   open: openCameraReducer,
-  access: accessPhotoReducer
+  access: accessPhotoReducer,
+  display: displayReducer
 });

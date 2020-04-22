@@ -4,14 +4,15 @@ import { createStore, applyMiddleware } from "redux";
 import createSagaMiddleware from "redux-saga";
 import reducer from "./reducers";
 import Route from './screens/Route';
-import { translate } from './screens/AccessPhotoPage/saga';
+import rootSaga from './sagas';
 
 
 const sagaMiddleware = createSagaMiddleware();
 
 //const store = createStore(reducer);
 const store = createStore(reducer, applyMiddleware(sagaMiddleware));
-sagaMiddleware.run(translate);
+console.log("ROOT SAGA", rootSaga)
+sagaMiddleware.run(rootSaga);
 console.log(store.getState());
 
 export default function MainScreen() {

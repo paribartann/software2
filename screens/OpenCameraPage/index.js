@@ -20,8 +20,8 @@ import {
 import * as Permissions from "expo-permissions";
 import { useDispatch } from 'react-redux';
 
-import { changeCameraType } from "../OptionPage/actions";
-import { makeSelectType } from "../OptionPage/selectors";
+import { changeCameraType } from "../MainPage/actions";
+import { makeSelectType } from "../MainPage/selectors";
 import { savePicture } from "./actions";
 import { resetLoadingText } from "../AccessPhotoPage/actions"
 import * as ImagePicker from "expo-image-picker";
@@ -136,7 +136,7 @@ const mapStateToProps = createStructuredSelector({
 export function mapDispatchToProps(dispatch) {
   return {
     handleCameraView: (type_, Camera) => {
-      dispatch(resetLoadingText())
+      
       cam_type_ =
         type_ === Camera.Constants.Type.back
           ? Camera.Constants.Type.front
@@ -145,7 +145,7 @@ export function mapDispatchToProps(dispatch) {
     },
 
     takePicture: async (camRef, navigation) => {
-      dispatch(resetLoadingText())
+      
       const camera = camRef.current;
 
       if (camera) {
@@ -158,7 +158,7 @@ export function mapDispatchToProps(dispatch) {
     },
 
     pickImage: async (navigation) => {
-      dispatch(resetLoadingText())
+      
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images
       });

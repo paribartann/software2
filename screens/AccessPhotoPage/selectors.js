@@ -21,4 +21,10 @@ const makeSelectLoading = () =>
     accessState => accessState.text,
   );
 
-export { selectAccess, makeSelectLoading, makeSelectError, makeSelectText };
+  const makeSelectInitialLanguage = () =>
+  createSelector(
+    selectAccess,
+    accessState => accessState.lang,
+  );
+
+export { selectAccess, makeSelectLoading, makeSelectError, makeSelectText, makeSelectInitialLanguage };

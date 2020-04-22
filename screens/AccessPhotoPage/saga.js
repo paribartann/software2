@@ -4,14 +4,14 @@
 
 import { call, put, select, takeLatest } from "redux-saga/effects";
 
-import { TRANSLATE_IMAGE } from "./constants";
+import { EXTRACT_TEXT } from "./constants";
 
 import { makeSelectImage } from "../OpenCameraPage/selectors";
-import { textTranslated, textTranslationError } from "./actions";
+import { textExtractError, textExtractSuccess } from "./actions";
 import axios from "axios";
 
-function* translateImage() {
-  console.log("reached here!");
+function* extractingText() {
+  console.log("reached here extract saga!");
   const file = yield select(makeSelectImage());
   //console.log(file);
   const uri = file.uri;
@@ -27,7 +27,7 @@ function* translateImage() {
 
   try {
     const res = yield axios.post(
-      "https://783f85e1.ngrok.io/translateImage",
+      "https://ce2c226a.ngrok.io/extractText",
       formData,
       {
         headers: {
@@ -36,18 +36,18 @@ function* translateImage() {
       }
     );
 
-    const { translatedText } = res.data;
-    console.log(translatedText);
-    yield put(textTranslated(translatedText));
+    const { extractedText, language } = res.data;
+    console.log(extractedText);
+    yield put(textExtractSuccess(extractedText, language));
   } catch (err) {
     console.log(err);
-    yield put(textTranslationError(err));
+    yield put(textExtractError(err));
   }
 }
 
 /**
  * Root saga manages watcher lifecycle
  */
-export function* translate() {
-  yield takeLatest(TRANSLATE_IMAGE, translateImage);
+export function* extract() {
+  yield takeLatest(EXTRACT_TEXT, extractingText);
 }

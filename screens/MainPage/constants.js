@@ -1,0 +1,2 @@
+export const OPEN_CAMERA = 'OPEN_CAMERA';
+export const CHANGE_CAMERA_TYPE = 'CHANGE_CAMERA_TYPE';

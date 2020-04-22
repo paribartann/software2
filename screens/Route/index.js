@@ -3,7 +3,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 import LandingPage from '../LandingPage';
 import MainPage from '../MainPage';
-import OptionPage from '../OptionPage';
+import AboutPage from '../AboutPage';
 import AccessPhotoPage from '../AccessPhotoPage';
 import OpenCameraPage from '../OpenCameraPage';
 import DisplayPage from '../DisplayPage';
@@ -13,8 +13,8 @@ const AppStack = createStackNavigator(
   {
   Home : LandingPage,
   Main: MainPage,
-  Option: OptionPage,
   Open: OpenCameraPage,
+  About: AboutPage,
   Access: AccessPhotoPage,
   Display: DisplayPage
   },

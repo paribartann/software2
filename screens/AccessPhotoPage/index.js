@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   Image,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -14,45 +14,49 @@ import { compose } from "redux";
 import { createStructuredSelector } from "reselect";
 
 import { makeSelectImage } from "../OpenCameraPage/selectors";
-import { translateImage } from "./actions";
+import { extractText } from "./actions";
+
+import styled from "styled-components";
 
 const screenWidth = Math.round(Dimensions.get("window").width);
-const screenHeight = Math.round(Dimensions.get("window").height);
+const screenHeight = Math.round(Dimensions.get("window").height) * 0.9;
 
 export function AccessPhotoPage({ image_, handleTranslateImage, navigation }) {
   console.log(image_);
   return (
-    <View style={{ flex: 1 }}>
-      <Image
-        source={{ uri: image_.uri }}
-        style={{ width: screenWidth, height: screenHeight }}
-        resizeMode="contain"
-      ></Image>
-      <View style={{ position: 'absolute', right: 100, bottom: 50, justifyContent: 'center', alignItems: 'bottom'}}>
-        <TouchableOpacity style={styles.button} onPress={() => handleTranslateImage(image_, navigation)}>
-          <Text style={styles.text}>Translate Image</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    <ContainerView>
+      <ImageView>
+        <Image
+          source={{ uri: image_.uri }}
+          style={{ width: screenWidth, height: screenHeight, flex: 1 }}
+          resizeMode="contain"
+        ></Image>
+      </ImageView>
+      <ButtonView>
+        <Button onPress={() => handleTranslateImage(image_, navigation)}>
+          <ButtonText>Extract Text</ButtonText>
+        </Button>
+      </ButtonView>
+    </ContainerView>
   );
 }
 
 AccessPhotoPage.propTypes = {
   handleTranslateImage: PropTypes.func,
-  image_: PropTypes.object
+  image_: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
-  image_: makeSelectImage()
+  image_: makeSelectImage(),
 });
 
 export function mapDispatchToProps(dispatch) {
   return {
     handleTranslateImage: async (image_, navigation) => {
-      const desp = await dispatch(translateImage(image_));
+      const desp = await dispatch(extractText(image_));
       console.log("DESP", desp);
       navigation.navigate("Display");
-    }
+    },
   };
 }
 
@@ -60,20 +64,38 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect, memo)(AccessPhotoPage);
 
-const styles = StyleSheet.create({
-  button: {
-    marginTop: 15,
-    //padding: 5,
-    borderRadius: 15,
-    height: "100%",
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(255,209,71,0.7)"
-  },
-  text: {
-    color: "palevioletred",
-    fontWeight: "700",
-    fontSize: 24
-  }
-});
+const ContainerView = styled.View`
+  flex: 1;
+  background-color: silver;
+`;
+
+const ImageView = styled.View`
+  flex: 3;
+  align-items: center;
+  justify-content: center;
+  background-color: ghostwhite;
+  margin: 10px;
+`;
+
+const ButtonView = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Button = styled.TouchableOpacity`
+  margin-top: 15;
+  border-radius: 15;
+  height: 100;
+  width: 90%;
+  justify-content: center;
+  align-items: center;
+  background-color: slategray;
+`;
+
+const ButtonText = styled.Text`
+  font-weight: bold;
+  font-size: 50;
+  font-family: "Cochin";
+`;
+

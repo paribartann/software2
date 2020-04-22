@@ -1,69 +1,170 @@
-import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity
-} from "react-native";
+import React, { useEffect, memo } from "react";
+import { Text, View, TouchableOpacity } from "react-native";
+import { ListItem } from "react-native-elements";
+import styled from "styled-components";
 
-export default function MainPage({navigation}) {
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { compose } from "redux";
+import { createStructuredSelector } from "reselect";
+import { Camera } from "expo-camera";
+import * as Permissions from "expo-permissions";
+
+import { openCamera } from "./actions";
+import { makeSelectHasPermission, makeSelectType } from "./selectors";
+
+export function MainPage({ navigation, openCameraFunction }) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.textStyle}>MAIN PAGE</Text>
-      <Text style={styles.textStyle}>Please Choose the service you want to use today!</Text>
+    <ContainerView>
+      <TitleView>
+        <TitleText>Translation App</TitleText>
+        <SubTitleText>translation at your finger tips</SubTitleText>
+      </TitleView>
 
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Option")}
-        style={styles.button}
-      >
-        <Text style={styles.text}>English -> Nepali</Text>
-      </TouchableOpacity>
+      <StepsView>
+        <StepTitleView>
+          <StepTitleText>Steps</StepTitleText>
+        </StepTitleView>
+        <StepListView>
+          {stepsList.map((step, i) => (
+            <StepsListText key={i}> {step}</StepsListText>
+          ))}
+        </StepListView>
+      </StepsView>
 
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Option")}
-        style={styles.button}
-      >
-        <Text style={styles.text}>Nepali -> English</Text>
-      </TouchableOpacity>
-
-    </View>
+      <ButtonView>
+        <Button onPress={() => openCameraFunction(Camera, navigation)}>
+          <ButtonText> Open Camera</ButtonText>
+        </Button>
+      </ButtonView>
+    </ContainerView>
   );
 }
 
+MainPage.propTypes = {
+  hasPermission: PropTypes.bool,
+  type: PropTypes.object,
+  openCameraFunction: PropTypes.func,
+};
 
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "papayawhip",
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  textStyle: {
-    fontWeight: "bold",
-    fontSize: 24
-  },
-  //Big button styles
-  button: {
-    marginTop: 15,
-    //padding: 5,
-    borderRadius: 15,
-    height: 120,
-    width: "90%",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(255,209,71,0.7)"
-  },
-  text: {
-    color: "palevioletred",
-    fontWeight: "700",
-    fontSize: 24
-  },
-  imageBackground: {
-    flex: 1,
-    width: "100%",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center"
-  }
+const mapStateToProps = createStructuredSelector({
+  hasPermission: makeSelectHasPermission(),
+  type: makeSelectType(),
 });
+
+export function mapDispatchToProps(dispatch) {
+  return {
+    openCameraFunction: async (Camera, navigation) => {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA);
+
+      hasPermission_ = status === "granted";
+      type = Camera.Constants.Type.back;
+      dispatch(openCamera(hasPermission_, type));
+      if (hasPermission_) {
+        navigation.navigate("Open");
+      }
+    },
+  };
+}
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+
+export default compose(withConnect, memo)(MainPage);
+
+const ContainerView = styled.View`
+  flex: 1;
+  background-color: silver;
+`;
+
+const TitleView = styled.View`
+  flex: 0.5;
+  align-items: center;
+  justify-content: center;
+  background-color: ghostwhite;
+  border-radius: 50;
+  margin: 10px;
+`;
+
+const StepsView = styled.View`
+  flex: 3;
+  background-color: mintcream;
+  border-radius: 50;
+  margin: 10px;
+  align-items: center;
+`;
+const ButtonView = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+`;
+
+const StepTitleView = styled.View`
+  flex: 1;
+  align-items: center;
+`;
+
+const StepListView = styled.View`
+  flex: 4;
+`;
+
+const Button = styled.TouchableOpacity`
+  margin-top: 15;
+  border-radius: 15;
+  height: 100;
+  width: 90%;
+  justify-content: center;
+  align-items: center;
+  background-color: slategray;
+`;
+
+const ButtonText = styled.Text`
+  font-weight: bold;
+  font-size: 50;
+  font-family: "Cochin";
+`;
+
+const TitleText = styled.Text`
+  font-family: "Times New Roman";
+  font-size: 32px;
+  margin-top: 5px;
+  margin-bottom: 0px;
+  text-align: center;
+  font-weight: normal;
+  color: #222;
+`;
+
+const SubTitleText = styled.Text`
+  font-family: "Cochin";
+  font-size: 14px;
+  font-weight: 100;
+  font-variant: small-caps;
+  text-transform: uppercase;
+  color: #777777;
+  margin-top: 10px;
+  text-align: center !important;
+  letter-spacing: 0.3;
+`;
+
+const StepTitleText = styled.Text`
+  font-family: "Cochin";
+  font-size: 32px;
+  font-weight: bold;
+  font-variant: small-caps;
+  color: black;
+  margin-top: 10px;
+  text-decoration:underline;
+`;
+
+const StepsListText = styled.Text`
+  color: black;
+  font-family: "Times New Roman";
+  font-size: 30px;
+  padding: 10px;
+`;
+
+const stepsList = [
+  "1. Take picture / Upload picture from your gallery",
+  "2. Extract texts from picture",
+  "3. Translate texts to the language of your choice",
+  "4. Listen to the translated text",
+];
