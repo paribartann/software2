@@ -1,4 +1,4 @@
-import { SET_TRANSLATE_TO, TRANSLATE_TEXT, TRANSLATE_TEXT_SUCCESS, TRANSLATE_TEXT_ERROR, SET_SHOW_BOX } from './constants';
+import { SET_TRANSLATE_TO, TRANSLATE_TEXT, TRANSLATE_TEXT_SUCCESS, TRANSLATE_TEXT_ERROR, SET_SHOW_BOX, SAVE_E_TEXT } from './constants';
 
 export function setTranslateToVariable(code) {
     return {
@@ -33,5 +33,13 @@ export function textTranslationError(error) {
 export function setShowBox() {
   return {
     type: SET_SHOW_BOX
+  }
+} 
+
+export function saveEText(e_text, lang) {
+  return {
+    type: SAVE_E_TEXT,
+    e_text,
+    lang
   }
 } 

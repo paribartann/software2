@@ -2,7 +2,7 @@ import produce from "immer";
 import { CHANGE_CAMERA_TYPE, TAKE_PICTURE } from "./constants";
 
 export const initialState = {
-  image_object: {},
+  image_object: null,
   cam_type_: null
 };
 

@@ -12,9 +12,9 @@ import DisplayPage from '../DisplayPage';
 const AppStack = createStackNavigator(
   {
   Home : LandingPage,
+  About: AboutPage,
   Main: MainPage,
   Open: OpenCameraPage,
-  About: AboutPage,
   Access: AccessPhotoPage,
   Display: DisplayPage
   },

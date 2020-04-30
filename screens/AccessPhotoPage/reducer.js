@@ -1,22 +1,29 @@
 import produce from "immer";
 import {
+  EXTRACT_TEXT,
   EXTRACT_TEXT_ERROR,
-  EXTRACT_TEXT_SUCCESS,
-  RESET_LOADING_TEXT
+  EXTRACT_TEXT_SUCCESS
 } from "./constants";
 
 export const initialState = {
   loading: false,
   error: false,
   text: "",
-  lang: null
+  lang: null,
 };
 
 const accessPhotoReducer = (state = initialState, action) =>
-  produce(state, draft => {
+  produce(state, (draft) => {
     switch (action.type) {
-      case EXTRACT_TEXT_SUCCESS:
+      case EXTRACT_TEXT:
         draft.loading = true;
+        draft.text = "";
+        draft.error = false;
+        draft.lang = null
+        break;
+
+      case EXTRACT_TEXT_SUCCESS:
+        draft.loading = false;
         draft.text = action.e_text;
         draft.lang = action.language;
         break;
@@ -26,9 +33,6 @@ const accessPhotoReducer = (state = initialState, action) =>
         draft.loading = false;
         break;
 
-      case RESET_LOADING_TEXT:
-        draft.loading = false;
-        break;
     }
   });
 

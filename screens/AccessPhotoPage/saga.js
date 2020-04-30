@@ -8,6 +8,7 @@ import { EXTRACT_TEXT } from "./constants";
 
 import { makeSelectImage } from "../OpenCameraPage/selectors";
 import { textExtractError, textExtractSuccess } from "./actions";
+import {saveEText} from "../DisplayPage/actions"
 import axios from "axios";
 
 function* extractingText() {
@@ -27,7 +28,7 @@ function* extractingText() {
 
   try {
     const res = yield axios.post(
-      "https://ce2c226a.ngrok.io/extractText",
+      "https://0f3d157f.ngrok.io/extractText",
       formData,
       {
         headers: {
@@ -38,6 +39,7 @@ function* extractingText() {
 
     const { extractedText, language } = res.data;
     console.log(extractedText);
+    yield put(saveEText(extractedText, language));
     yield put(textExtractSuccess(extractedText, language));
   } catch (err) {
     console.log(err);

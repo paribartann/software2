@@ -5,7 +5,7 @@ import {
   View,
   TouchableOpacity,
   Platform,
-  Alert
+  Alert,
 } from "react-native";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -15,15 +15,15 @@ import { Camera } from "expo-camera";
 import {
   FontAwesome,
   Ionicons,
-  MaterialCommunityIcons
+  MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import * as Permissions from "expo-permissions";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 
 import { changeCameraType } from "../MainPage/actions";
 import { makeSelectType } from "../MainPage/selectors";
 import { savePicture } from "./actions";
-import { resetLoadingText } from "../AccessPhotoPage/actions"
+//import { resetLoadingText } from "../AccessPhotoPage/actions";
 import * as ImagePicker from "expo-image-picker";
 
 export function OpenCameraPage({
@@ -31,9 +31,10 @@ export function OpenCameraPage({
   handleCameraView,
   takePicture,
   navigation,
-  pickImage
+  pickImage,
 }) {
   const [galleryPermission, setGalleryPermission] = useState(false);
+  const [type, setType] = useState(Camera.Constants.Type.back);
   const camRef = useRef(null);
 
   getPermissionAsync = async () => {
@@ -47,40 +48,34 @@ export function OpenCameraPage({
     }
   };
 
-  const dispatch = useDispatch();
-
-  useEffect( () => {
-    dispatch(resetLoadingText());
-  })
-
-  useEffect( () => {
+  useEffect(() => {
     getPermissionAsync();
   }, []);
 
   return (
     <View style={{ flex: 1 }}>
-      <Camera style={{ flex: 1 }} type={_type_} ref={camRef}>
+      <Camera style={{ flex: 1 }} type={type} ref={camRef}>
         <View
           style={{
             flex: 1,
             flexDirection: "row",
             justifyContent: "space-between",
-            margin: 30
+            margin: 30,
           }}
         >
           <TouchableOpacity
             style={{
               alignSelf: "flex-end",
               alignItems: "center",
-              backgroundColor: "transparent"
+              backgroundColor: "transparent",
             }}
             onPress={() => {
               if (galleryPermission) {
                 pickImage(navigation);
-              }
-              else
-              {
-                Alert.alert("Sorry, we need camera roll permissions to move forward!");
+              } else {
+                Alert.alert(
+                  "Sorry, we need camera roll permissions to move forward!"
+                );
               }
             }}
           >
@@ -93,7 +88,7 @@ export function OpenCameraPage({
             style={{
               alignSelf: "flex-end",
               alignItems: "center",
-              backgroundColor: "transparent"
+              backgroundColor: "transparent",
             }}
             onPress={() => takePicture(camRef, navigation)}
           >
@@ -106,9 +101,16 @@ export function OpenCameraPage({
             style={{
               alignSelf: "flex-end",
               alignItems: "center",
-              backgroundColor: "transparent"
+              backgroundColor: "transparent",
             }}
-            onPress={() => handleCameraView(_type_, Camera)}
+            //onPress={() => handleCameraView(_type_, Camera)}
+            onPress={() => {
+              setType(
+                type === Camera.Constants.Type.back
+                  ? Camera.Constants.Type.front
+                  : Camera.Constants.Type.back
+              );
+            }}
           >
             <MaterialCommunityIcons
               name="camera-switch"
@@ -130,13 +132,12 @@ OpenCameraPage.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  _type_: makeSelectType()
+  _type_: makeSelectType(),
 });
 
 export function mapDispatchToProps(dispatch) {
   return {
     handleCameraView: (type_, Camera) => {
-      
       cam_type_ =
         type_ === Camera.Constants.Type.back
           ? Camera.Constants.Type.front
@@ -145,26 +146,23 @@ export function mapDispatchToProps(dispatch) {
     },
 
     takePicture: async (camRef, navigation) => {
-      
       const camera = camRef.current;
 
       if (camera) {
         let photo = await camera.takePictureAsync();
         console.log(photo);
         dispatch(savePicture(photo));
-        console.log("After first dispatch!");
         navigation.navigate("Access");
       }
     },
 
     pickImage: async (navigation) => {
-      
       let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
       });
       dispatch(savePicture(result));
       navigation.navigate("Access");
-    }
+    },
   };
 }
 

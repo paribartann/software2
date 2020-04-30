@@ -1,13 +1,5 @@
 import React, { useEffect, memo, useRef } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  ImageBackground,
-  Image,
-  Dimensions,
-} from "react-native";
+import { Image, Dimensions } from "react-native";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { compose } from "redux";
@@ -21,8 +13,7 @@ import styled from "styled-components";
 const screenWidth = Math.round(Dimensions.get("window").width);
 const screenHeight = Math.round(Dimensions.get("window").height) * 0.9;
 
-export function AccessPhotoPage({ image_, handleTranslateImage, navigation }) {
-  console.log(image_);
+export function AccessPhotoPage({ image_, handleExtactText, navigation }) {
   return (
     <ContainerView>
       <ImageView>
@@ -33,7 +24,7 @@ export function AccessPhotoPage({ image_, handleTranslateImage, navigation }) {
         ></Image>
       </ImageView>
       <ButtonView>
-        <Button onPress={() => handleTranslateImage(image_, navigation)}>
+        <Button onPress={() => handleExtactText(navigation)}>
           <ButtonText>Extract Text</ButtonText>
         </Button>
       </ButtonView>
@@ -52,9 +43,10 @@ const mapStateToProps = createStructuredSelector({
 
 export function mapDispatchToProps(dispatch) {
   return {
-    handleTranslateImage: async (image_, navigation) => {
-      const desp = await dispatch(extractText(image_));
+    handleExtactText: (navigation) => {
+      const desp = dispatch(extractText());
       console.log("DESP", desp);
+      // dispatch()
       navigation.navigate("Display");
     },
   };
@@ -98,4 +90,3 @@ const ButtonText = styled.Text`
   font-size: 50;
   font-family: "Cochin";
 `;
-

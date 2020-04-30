@@ -33,4 +33,16 @@ const makeSelectTranslateToCode = () =>
     displayState => displayState.showBox,
   );
 
-export { selectDisplay, makeSelectTranslateToCode, makeSelectTranslatedText, makeSelectTranslationLoading, makeSelectTranslationError, makeSelectShowBox };
+  const makeSelectEText = () =>
+  createSelector(
+    selectDisplay,
+    displayState => displayState.extracted_text,
+  );
+
+  const makeSelectIniLang = () =>
+  createSelector(
+    selectDisplay,
+    displayState => displayState.iniLang,
+  );
+
+export { selectDisplay, makeSelectTranslateToCode, makeSelectTranslatedText, makeSelectTranslationLoading, makeSelectTranslationError, makeSelectShowBox, makeSelectEText, makeSelectIniLang};

@@ -1,5 +1,5 @@
 import React, { useEffect, memo } from "react";
-import { Text, View, TouchableOpacity } from "react-native";
+import { Alert } from "react-native";
 import { ListItem } from "react-native-elements";
 import styled from "styled-components";
 
@@ -13,7 +13,9 @@ import * as Permissions from "expo-permissions";
 import { openCamera } from "./actions";
 import { makeSelectHasPermission, makeSelectType } from "./selectors";
 
-export function MainPage({ navigation, openCameraFunction }) {
+export function MainPage({ navigation, openCameraFunction, type }) {
+
+  console.log(typeof type)
   return (
     <ContainerView>
       <TitleView>
@@ -59,9 +61,14 @@ export function mapDispatchToProps(dispatch) {
 
       hasPermission_ = status === "granted";
       type = Camera.Constants.Type.back;
+      console.log("TYPEOF: ", typeof type)
       dispatch(openCamera(hasPermission_, type));
       if (hasPermission_) {
         navigation.navigate("Open");
+      }
+      else
+      {
+        Alert.alert("Need permission to move forward!")
       }
     },
   };

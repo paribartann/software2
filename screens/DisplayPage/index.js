@@ -1,6 +1,6 @@
 import React, { memo, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { Container, Item, Form, Input, Label } from "native-base";
+
 import PropTypes, { object } from "prop-types";
 import { connect } from "react-redux";
 import { compose } from "redux";
@@ -25,6 +25,8 @@ import {
   makeSelectTranslatedText,
   makeSelectTranslationLoading,
   makeSelectShowBox,
+  makeSelectEText,
+  makeSelectIniLang,
 } from "./selectors";
 
 import { setTranslateToVariable, translateText } from "./actions";
@@ -39,7 +41,6 @@ export function DisplayPage({
   handleTranslateText,
   t_loading,
   t_text,
-  show,
 }) {
   console.log("E_TEXT", e_text);
   console.log("T_TEXT", t_text);
@@ -50,21 +51,7 @@ export function DisplayPage({
   originalIndex = languages.findIndex(isLanguage);
   console.log(originalIndex);
 
-  if (!t_loading) {
-    TranslationRender = (
-      <Progress.CircleSnail color={["red", "green", "blue"]} size={100} />
-    );
-  }
-
-  if (show) {
-    TranslationRender = (
-      <View style={{ justifyContent: "center" }}>
-        <TranslatedText>{t_text}</TranslatedText>
-      </View>
-    );
-  }
-
-  if (!loading) {
+  if (loading) {
     ComponentToRender = (
       <Progress.CircleSnail color={["red", "green", "blue"]} size={100} />
     );
@@ -76,7 +63,7 @@ export function DisplayPage({
     );
   }
 
-  if (loading) {
+  if (!loading) {
     TranslateToComponentToRender = (
       <TranslateToView>
         <TranslateToViewTop>
@@ -107,6 +94,18 @@ export function DisplayPage({
     );
   }
 
+  if (!loading) {
+    if (t_loading) {
+      TranslationRender = (
+        <Progress.CircleSnail color={["red", "green", "blue"]} size={100} />
+      );
+    }
+
+    if (!t_loading && t_text) {
+      TranslationRender = <TranslatedText>{t_text}</TranslatedText>;
+    }
+  }
+
   return (
     <ContainerView>
       <ExtractView>
@@ -123,6 +122,7 @@ export function DisplayPage({
     </ContainerView>
   );
 }
+
 DisplayPage.propTypes = {
   loading: PropTypes.bool,
   e_text: PropTypes.string,
@@ -136,8 +136,8 @@ DisplayPage.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   loading: makeSelectLoading(),
-  e_text: makeSelectText(),
-  iniLang: makeSelectInitialLanguage(),
+  e_text: makeSelectEText(),
+  iniLang: makeSelectIniLang(),
   t_loading: makeSelectTranslationLoading(),
   t_text: makeSelectTranslatedText(),
   show: makeSelectShowBox(),

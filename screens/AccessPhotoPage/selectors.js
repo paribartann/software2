@@ -2,6 +2,7 @@ import { createSelector } from 'reselect';
 import { initialState } from './reducer';
 
 const selectAccess = state => state.access || initialState;
+console.log("IS, :",initialState);
 
 const makeSelectLoading = () =>
   createSelector(

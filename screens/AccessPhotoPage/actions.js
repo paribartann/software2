@@ -27,3 +27,4 @@ export function resetLoadingText() {
     type: RESET_LOADING_TEXT
   }
 } 
+

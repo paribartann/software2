@@ -14,11 +14,19 @@ export default function AboutPage({}) {
         <AboutTitleView>
           <AboutTitleText>About</AboutTitleText>
         </AboutTitleView>
-        <AboutContentView></AboutContentView>
+        <AboutContentView>
+          <AboutContentText>
+            A mobile application that helps non-English speakers in
+            understanding instructions from signboard at public places written
+            in the English or other language, by recognizing the characters from
+            the image, translating to the language of choice, and reading them
+            out loud. The translation can be done to and from over 50 languages.
+          </AboutContentText>
+        </AboutContentView>
       </AboutView>
 
       <FooterView>
-      <FooterText>{'\u00A9'} Translation App Team</FooterText>
+        <FooterText>{"\u00A9"} Translation App Team</FooterText>
       </FooterView>
     </ContainerView>
   );
@@ -75,6 +83,12 @@ const AboutTitleView = styled.View`
 
 const AboutContentView = styled.View`
   flex: 3;
+`;
+
+const AboutContentText = styled.Text`
+  font-size: 24;
+  font-family: "Cochin";
+  padding: 10px;
 `;
 
 const FooterView = styled.View`
