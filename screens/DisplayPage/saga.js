@@ -14,7 +14,7 @@ import axios from "axios";
 function* translatingText() {
   //yield(put(setShowBox()));
 
-  const url = "https://0f3d157f.ngrok.io/translateText"
+  const url = "http://24bce782.ngrok.io/translateText"
   const text_ = yield select(makeSelectEText());
 
   const code_ = yield select(makeSelectTranslateToCode());

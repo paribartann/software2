@@ -10,14 +10,30 @@ import { makeSelectImage } from "../OpenCameraPage/selectors";
 import { textExtractError, textExtractSuccess } from "./actions";
 import {saveEText} from "../DisplayPage/actions"
 import axios from "axios";
+import * as ImageManipulator from 'expo-image-manipulator';
 
 function* extractingText() {
   console.log("reached here extract saga!");
   const file = yield select(makeSelectImage());
+  console.log("SAGA FILE: ",file)
+
+  const resizedPhoto = yield ImageManipulator.manipulateAsync(
+    file.uri,
+    [{ resize: { width: 300 } }], // resize to width of 300 and preserve aspect ratio 
+    { compress: 0.7, format: 'jpeg' },
+   );
   //console.log(file);
-  const uri = file.uri;
+  console.log("RS IN SAGA: ", resizedPhoto);
+  // const uri = file.uri;
+  // const uriParts = uri.split(".");
+  // const fileType = uriParts[uriParts.length - 1];
+
+  const uri = resizedPhoto.uri;
   const uriParts = uri.split(".");
   const fileType = uriParts[uriParts.length - 1];
+
+
+
 
   const formData = new FormData();
   formData.append("photo", {
@@ -28,7 +44,7 @@ function* extractingText() {
 
   try {
     const res = yield axios.post(
-      "https://0f3d157f.ngrok.io/extractText",
+      "http://24bce782.ngrok.io/extractText",
       formData,
       {
         headers: {

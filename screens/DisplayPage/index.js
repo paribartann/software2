@@ -41,11 +41,12 @@ export function DisplayPage({
   handleTranslateText,
   t_loading,
   t_text,
+  navigation,
 }) {
   console.log("E_TEXT", e_text);
   console.log("T_TEXT", t_text);
   let originalIndex;
-  let ComponentToRender, TranslateToComponentToRender, TranslationRender;
+  let ComponentToRender, TranslateToComponentToRender, TranslationRender, TranslationViewRender;
 
   const isLanguage = (object) => object[Object.keys(object)].code === iniLang;
   originalIndex = languages.findIndex(isLanguage);
@@ -106,6 +107,15 @@ export function DisplayPage({
     }
   }
 
+  if (!loading) {
+    TranslationViewRender = (
+      <TranslateView>
+        <TitleText>Translated Text</TitleText>
+        {TranslationRender}
+      </TranslateView>
+    );
+  }
+
   return (
     <ContainerView>
       <ExtractView>
@@ -115,10 +125,17 @@ export function DisplayPage({
 
       {TranslateToComponentToRender}
 
-      <TranslateView>
+      {/* <TranslateView>
         <TitleText>Translated Text</TitleText>
         {TranslationRender}
-      </TranslateView>
+      </TranslateView> */}
+      {TranslationViewRender}
+
+      <DoneView>
+        <DoneButton onPress={() => navigation.navigate("Main")}>
+          <DoneButtonText> Done</DoneButtonText>
+        </DoneButton>
+      </DoneView>
     </ContainerView>
   );
 }
@@ -189,7 +206,8 @@ const TranslateToViewTop = styled.View`
 `;
 
 const TranslateToViewBottom = styled.View`
-  flex: 2;
+  flex: 1;
+  padding-bottom: 20px;
 `;
 
 const TranslateView = styled.View`
@@ -198,11 +216,34 @@ const TranslateView = styled.View`
   align-items: center;
 `;
 
+const DoneView = styled.View`
+  flex: 0.5;
+  background-color: #98d2c1;
+  align-items: center;
+  padding-bottom: 50px;
+`;
+
+const DoneButton = styled.TouchableOpacity`
+  margin-top: 15;
+  border-radius: 15;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: slategray;
+`;
+
+const DoneButtonText = styled.Text`
+  font-weight: bold;
+  font-size: 30;
+  font-family: "Cochin";
+`;
+
 const Button = styled.TouchableOpacity`
   margin-top: 15;
   border-radius: 15;
-  height: 80;
-  width: 90%;
+  height: 80%;
+  width: 100%;
   justify-content: center;
   align-items: center;
   background-color: slategray;
@@ -253,6 +294,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
     fontFamily: "Cochin",
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   dropDownTextStyle: {
     fontSize: 24,

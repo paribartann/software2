@@ -15,6 +15,7 @@ app.listen(3001, () => {
 });
 
 app.post("/extractText", async (req, res) => {
+  
   console.log("HEREEE IN EXTRACT!");
   console.log(req.files);
   if (req.files === null) {

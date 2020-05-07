@@ -1,19 +1,37 @@
 import React, { useEffect, memo, useRef } from "react";
-import { Image, Dimensions } from "react-native";
+import {
+  Image,
+  Dimensions,
+  NativeModules,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { createStructuredSelector } from "reselect";
+import ImagePicker from "react-native-image-crop-picker";
 
 import { makeSelectImage } from "../OpenCameraPage/selectors";
 import { extractText } from "./actions";
 
 import styled from "styled-components";
+import { Ionicons } from "@expo/vector-icons";
+import ImageResizer from "react-native-image-resizer";
+import { savePicture } from "../OpenCameraPage/actions";
+import * as ImageManipulator from 'expo-image-manipulator';
+
+//var ImagePicker = NativeModules.ImageCropPicker;
 
 const screenWidth = Math.round(Dimensions.get("window").width);
 const screenHeight = Math.round(Dimensions.get("window").height) * 0.9;
 
-export function AccessPhotoPage({ image_, handleExtactText, navigation }) {
+export function AccessPhotoPage({
+  image_,
+  handleExtactText,
+  navigation,
+  handleResize,
+}) {
   return (
     <ContainerView>
       <ImageView>
@@ -22,9 +40,33 @@ export function AccessPhotoPage({ image_, handleExtactText, navigation }) {
           style={{ width: screenWidth, height: screenHeight, flex: 1 }}
           resizeMode="contain"
         ></Image>
+        {/* <TouchableOpacity
+          style={{
+            alignSelf: "flex-end",
+            alignItems: "center",
+            backgroundColor: "transparent",
+          }}
+          onPress={() =>
+            ImagePicker.openPicker({
+              path: image_.uri,
+              width: 300,
+              height: 400,
+            }).then((image) => {
+              console.log(image);
+            })
+          }
+        >
+          <Ionicons name="ios-crop" style={{ color: "black", fontSize: 40 }} />
+        </TouchableOpacity> */}
       </ImageView>
+
       <ButtonView>
-        <Button onPress={() => handleExtactText(navigation)}>
+        <Button
+          onPress={() => {
+            handleResize(image_.uri)
+            handleExtactText(navigation);
+          }}
+        >
           <ButtonText>Extract Text</ButtonText>
         </Button>
       </ButtonView>
@@ -35,6 +77,7 @@ export function AccessPhotoPage({ image_, handleExtactText, navigation }) {
 AccessPhotoPage.propTypes = {
   handleTranslateImage: PropTypes.func,
   image_: PropTypes.object,
+  handleCropping: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -48,6 +91,29 @@ export function mapDispatchToProps(dispatch) {
       console.log("DESP", desp);
       // dispatch()
       navigation.navigate("Display");
+    },
+
+    handleCropping: (uri) => {
+      ImagePicker.openPicker({
+        path: uri,
+        width: 300,
+        height: 400,
+      }).then((image) => {
+        console.log(image);
+      });
+    },
+
+    handleResize: async (uri) => {
+      console.log("URIIIII: ", uri);
+
+      const resizedPhoto = await ImageManipulator.manipulateAsync(
+        uri,
+        [{ resize: { width: 300 } }], // resize to width of 300 and preserve aspect ratio 
+        { compress: 0.7, format: 'jpeg' },
+       );
+        dispatch(savePicture(resizedPhoto));
+       console.log("RSSSSSSSSSSSPPPP: ",resizedPhoto);
+     
     },
   };
 }
